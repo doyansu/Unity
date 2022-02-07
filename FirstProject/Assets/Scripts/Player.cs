@@ -1,17 +1,26 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class player : MonoBehaviour
+public class Player : MonoBehaviour
 {
-    public float moveSpeed = 5;// [SerializeField] float moveSpeed = 5; 可在 unity 進行調整
-    public float jumpHeight = 10;
-    int jump = 0, doubleJump = 1;
-
+    [SerializeField] float moveSpeed = 5f;// [SerializeField] float moveSpeed = 5; 可在 unity 進行調整
+    [SerializeField] float jumpHeight = 10f;
+    [SerializeField] int HP;
+    [SerializeField] GameObject HPBar;
+    [SerializeField] Text socreText;
+    GameObject currentFloor;
+    //int jump = 0, doubleJump = 1;
+    int score;
+    float scoreTime;
 
     // Start is called before the first frame update
     void Start()
     {
+        HP = 10;
+        score = 0;
+        scoreTime = 0f;
         //transform.Translate(1, 0, 0); x += 1, y += 0, z += 0
         //Debug.Log("123"); (debug)
     }
@@ -28,7 +37,7 @@ public class player : MonoBehaviour
             transform.Translate(-moveSpeed * Time.deltaTime, 0, 0);
         }
 
-        if(doubleJump > 0 && (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)))
+        /*if(doubleJump > 0 && (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)))
         {
             transform.Translate(0, 30 * jumpHeight * Time.deltaTime, 0);
             doubleJump--;
@@ -39,24 +48,81 @@ public class player : MonoBehaviour
             jump--;
         }
             
-        /*
         if(Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
             transform.Translate(0, -moveSpeed * Time.deltaTime, 0);
         */
+        UPdateScore();
+
     }
 
     void OnCollisionEnter2D(Collision2D other)// 碰撞處理
     {
-        doubleJump = 1;
+        //doubleJump = 1;
         if(other.gameObject.tag == "Normal")
-            Debug.Log("bong1");
+        {
+            if(other.contacts[0].normal == new Vector2(0f, 1f))// 用法向量判斷撞到階梯的哪一邊
+            {
+                currentFloor = other.gameObject;
+                ModifyHp(1);
+                Debug.Log("撞到第一種階梯");
+            }
+        }
         else if(other.gameObject.tag == "Nails")
-            Debug.Log("bong2");
+        {
+            if(other.contacts[0].normal == new Vector2(0f, 1f))
+            {
+                currentFloor = other.gameObject;
+                ModifyHp(-3);
+                Debug.Log("撞到第二種階梯");
+            }
+        }
+        else if(other.gameObject.tag == "Ceiling")
+        {
+            currentFloor.GetComponent<BoxCollider2D>().enabled = false;
+            Debug.Log("撞到天花板");
+        }
+            
     }   
 
     void OnTriggerEnter2D(Collider2D other) {// 觸發處理
         if(other.gameObject.tag == "DeathLine")
-            Debug.Log("lose");
+            Debug.Log("輸掉了!");
+    }
+
+    void ModifyHp(int num)
+    {
+        HP += num;
+        if(HP > 10)
+            HP = 10;
+        else if (HP < 0)
+            HP = 0;
+        UPdateHPBar();
+    }
+
+    void UPdateHPBar()
+    {
+        for(int i = 0; i < HPBar.transform.childCount; i++)
+        {
+            if(HP > i)
+            {
+                HPBar.transform.GetChild(i).gameObject.SetActive(true);
+            }
+            else 
+            {
+                HPBar.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+    }
+
+    void UPdateScore()
+    {
+        scoreTime += Time.deltaTime;
+        if(scoreTime > 2f)
+        {
+            score++;
+            scoreTime = 0f;
+            socreText.text = "Score:" + score.ToString();
+        }
     }
 
 }

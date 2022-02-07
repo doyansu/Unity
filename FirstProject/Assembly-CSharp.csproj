@@ -36,10 +36,9 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Player.cs" />
-     <Compile Include="Assets\Scripts\Floor.cs" />
-     <Compile Include="Assets\player.cs" />
      <Compile Include="Assets\Scripts\FloorManager.cs" />
+     <Compile Include="Assets\Scripts\player.cs" />
+     <Compile Include="Assets\Scripts\Floor.cs" />
     <Reference Include="UnityEngine">
         <HintPath>C:\Program Files\Unity\Hub\Editor\2020.3.27f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
     </Reference>

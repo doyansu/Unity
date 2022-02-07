@@ -16,7 +16,7 @@ public class Floor : MonoBehaviour
     void Update()
     {
         transform.Translate(0, moveSpeed * Time.deltaTime, 0);
-        if(transform.position.y > 6f)// 超出屋頂
+        if(transform.position.y > 5f)// 超出屋頂
         {
             Destroy(gameObject);
             transform.parent.GetComponent<FloorManager>().SpanFloor();// 拿取母物件 Component 並使用
