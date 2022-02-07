@@ -1,7 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.UI; // UI
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public class Player : MonoBehaviour
     Animator anim;
     SpriteRenderer render;
     AudioSource deathSound;
+    [SerializeField] GameObject replayButton;
 
     //[SerializeField] float jumpHeight = 10f;
     //int jump = 0, doubleJump = 1;
@@ -108,8 +110,8 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other) {// 觸發處理
         if(other.gameObject.tag == "DeathLine"){
-            deathSound.Play();
             Debug.Log("輸掉了!");
+            Die();// 死亡函式
         }
     }
 
@@ -121,7 +123,7 @@ public class Player : MonoBehaviour
         else if (HP <= 0)
         {
             HP = 0;
-            deathSound.Play();
+            Die();
         }
         UPdateHPBar();
     }
@@ -150,6 +152,19 @@ public class Player : MonoBehaviour
             scoreTime = 0f;
             socreText.text = "Score:" + score.ToString();
         }
+    }
+
+    void Die() // 死亡函式
+    {
+        deathSound.Play();// 死亡音效
+        Time.timeScale = 0f;// 暫停遊戲 倍數可加速
+        replayButton.SetActive(true);
+    }
+
+    public void Replay()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("SampleScene");// 重新載入場景
     }
 
 }
