@@ -1,5 +1,0 @@
-https://www.youtube.com/watch?v=nPW6tKeapsM&list=WL&index=2&t=140s
-
-Sprite Renderer   	顏色形狀
-Rigidbody 2D      	物理特性
-Collider 		碰撞範圍 // is Trigger 只是觸發

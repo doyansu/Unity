@@ -14,6 +14,7 @@ public class Player : MonoBehaviour
     float scoreTime; // 經過多久時間 2 加一分
     Animator anim;
     SpriteRenderer render;
+    AudioSource deathSound;
 
     //[SerializeField] float jumpHeight = 10f;
     //int jump = 0, doubleJump = 1;
@@ -27,6 +28,7 @@ public class Player : MonoBehaviour
         scoreTime = 0f;
         anim = GetComponent<Animator>();
         render = GetComponent<SpriteRenderer>();
+        deathSound = GetComponent<AudioSource>();
         //transform.Translate(1, 0, 0); x += 1, y += 0, z += 0
         //Debug.Log("123"); (debug)
     }
@@ -79,6 +81,7 @@ public class Player : MonoBehaviour
                 Debug.Log("撞到第一種階梯");
                 currentFloor = other.gameObject;// 調整當前 Floor
                 ModifyHp(1);// 調整當前 HP
+                other.gameObject.GetComponent<AudioSource>().Play();// 播放音效
             }
         }
         else if(other.gameObject.tag == "Nails")
@@ -89,6 +92,7 @@ public class Player : MonoBehaviour
                 currentFloor = other.gameObject;
                 ModifyHp(-3);
                 anim.SetTrigger("hurt");// 觸發受傷動畫
+                other.gameObject.GetComponent<AudioSource>().Play();
             }
         }
         else if(other.gameObject.tag == "Ceiling")
@@ -97,13 +101,16 @@ public class Player : MonoBehaviour
             currentFloor.GetComponent<BoxCollider2D>().enabled = false;// 撞到天花板將腳下階梯的碰撞取消
             ModifyHp(-3);
             anim.SetTrigger("hurt");
+            other.gameObject.GetComponent<AudioSource>().Play();
         }
             
     }   
 
     void OnTriggerEnter2D(Collider2D other) {// 觸發處理
-        if(other.gameObject.tag == "DeathLine")
+        if(other.gameObject.tag == "DeathLine"){
+            deathSound.Play();
             Debug.Log("輸掉了!");
+        }
     }
 
     void ModifyHp(int num)// 調整血量
@@ -111,8 +118,11 @@ public class Player : MonoBehaviour
         HP += num;
         if(HP > 10)
             HP = 10;
-        else if (HP < 0)
+        else if (HP <= 0)
+        {
             HP = 0;
+            deathSound.Play();
+        }
         UPdateHPBar();
     }
 
