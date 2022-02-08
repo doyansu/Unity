@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - player
+  - enemy
+  - wall
+  - DeathLine
+  - bullet
+  - item
   layers:
   - Default
   - TransparentFX
