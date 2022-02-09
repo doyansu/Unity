@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] Transform _firePoint = null;
+    [SerializeField] Transform[] _firePoint;
     [SerializeField] Bullet[] _bullets;
     [SerializeField] string _target = "NoTarget";
     [SerializeField] int _damage = 10;
@@ -30,7 +30,7 @@ public class Weapon : MonoBehaviour
     {
         if(_damage + up < _maxDamage)
         {
-            Debug.Log("武器升級 10 點傷害");
+            Debug.Log("武器升級 增加傷害");
             _damage += up;
         }
     }
@@ -51,25 +51,28 @@ public class Weapon : MonoBehaviour
     public void Shoot()
     {
         _nowTime += Time.deltaTime;
-        if(_nowTime >= _IntervalTime && _firePoint != null)
+        for(int i = 0; i < _firePoint.Length; i++)
         {
-            Bullet bullet = Instantiate(_bullets[_bulletType], _firePoint.position, _firePoint.rotation);
-            bullet.SetParent(gameObject.tag);
-            bullet.SetSpeed(_bulletSpeed);
-            bullet.SetDamage(_damage);
-            GameObject target = GameObject.Find(_target);
-            if(target != null)
+            if(_nowTime >= _IntervalTime)
             {
-                Vector3 v = target.transform.position - transform.position;
-                bullet.SetVelocity(v / Mathf.Sqrt(v.x * v.x + v.y * v.y));
-                //Debug.Log(Mathf.Atan(v.y / v.x) * (180.0f / Mathf.PI));
-                bullet.transform.Rotate(0f, 0f, Mathf.Atan(v.x / v.y) * (180f / Mathf.PI));
+                Bullet bullet = Instantiate(_bullets[_bulletType], _firePoint[i].position, _firePoint[i].rotation);
+                bullet.SetParent(gameObject.tag);
+                bullet.SetSpeed(_bulletSpeed);
+                bullet.SetDamage(_damage);
+                GameObject target = GameObject.Find(_target);
+                if(target != null)
+                {
+                    Vector3 v = target.transform.position - transform.position;
+                    bullet.SetVelocity(v / Mathf.Sqrt(v.x * v.x + v.y * v.y));
+                    //Debug.Log(Mathf.Atan(v.y / v.x) * (180.0f / Mathf.PI));
+                    bullet.transform.Rotate(0f, 0f, Mathf.Atan(v.x / v.y) * (180f / Mathf.PI));
+                }
+                else
+                {
+                    bullet.SetVelocity(bullet.transform.up);
+                }
+                _nowTime = 0;
             }
-            else
-            {
-                bullet.SetVelocity(bullet.transform.up);
-            }
-            _nowTime = 0;
         }
     }
 }

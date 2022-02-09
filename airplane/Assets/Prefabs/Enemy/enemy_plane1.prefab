@@ -202,7 +202,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05ee80065f5ea9c4e8264f6c7be20237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _firePoint: {fileID: 7840431767713013977}
+  _firePoint:
+  - {fileID: 7840431767713013977}
   _bullets:
   - {fileID: -9166839115943995185, guid: 1287af8d9a4287c48a6ea6c7d08c1377, type: 3}
   _target: Player
